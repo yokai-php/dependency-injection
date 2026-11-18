@@ -89,11 +89,11 @@ This compiler pass will :
 MIT License
 -----------
 
-License can be found [here](https://github.com/yann-eugone/dependency-injection/blob/master/LICENSE).
+License can be found [here](https://github.com/yokai-php/dependency-injection/blob/master/LICENSE).
 
 
 Authors
 -------
 
 The bundle was originally created by [Yann Eugoné](https://github.com/yann-eugone).
-See the list of [contributors](https://github.com/yann-eugone/dependency-injection/contributors).
+See the list of [contributors](https://github.com/yokai-php/dependency-injection/contributors).
