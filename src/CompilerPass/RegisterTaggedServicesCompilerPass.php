@@ -8,11 +8,21 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Reference;
 
+// Symfony 8.0 declares CompilerPassInterface::process() with a "void" return type,
+// a syntax that PHP < 7.1 cannot parse: process() is declared by the trait matching the installed Symfony version.
+if (\PHP_VERSION_ID >= 70100 && (new \ReflectionMethod(CompilerPassInterface::class, 'process'))->hasReturnType()) {
+    class_alias(ProcessWithReturnTypeTrait::class, ProcessTrait::class);
+} else {
+    class_alias(ProcessWithoutReturnTypeTrait::class, ProcessTrait::class);
+}
+
 /**
  * @author Yann Eugoné <yeugone@prestaconcept.net>
  */
 abstract class RegisterTaggedServicesCompilerPass implements CompilerPassInterface
 {
+    use ProcessTrait;
+
     /**
      * @var string
      */
@@ -41,9 +51,11 @@ abstract class RegisterTaggedServicesCompilerPass implements CompilerPassInterfa
     }
 
     /**
-     * @inheritDoc
+     * @param ContainerBuilder $container
+     *
+     * @return void
      */
-    public function process(ContainerBuilder $container)
+    private function doProcess(ContainerBuilder $container)
     {
         if (!$container->hasDefinition($this->service) && !$container->hasAlias($this->service)) {
             throw new LogicException(
